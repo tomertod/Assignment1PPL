@@ -1,0 +1,72 @@
+; Signature: last-item(lst)
+; Type: [List(T) -> T]
+; Purpose: Returns the last item of the list.
+; Pre-conditions: (not (null? lst))
+; Tests: (last-item '(1 2 3 4 5)) => 5
+(define last-item
+  (lambda (lst)
+    (if(null? (cdr lst))
+       (car lst)
+       (last-item(cdr lst)))))
+
+; Signature: remove-last-item
+; Type: [List(T) -> List(T)]
+; Purpose: Returns the list without the last item.
+; Pre-conditions: (not (null? lst)) 
+; Tests: (remove-last-item '(1 2 3 4 5)) => '(1 2 3 4)
+(define remove-last-item
+  (lambda (lst)
+    (if(null? (cdr lst))
+             '()
+             (cons (car lst) (remove-last-item (cdr lst))))))
+
+; Signature: rotate-right(lst)
+; Type: [List(T) -> List(T]
+; Purpose: Rotates the list one step to the right
+; Pre-conditions: (not (null? lst))
+; Tests: (rotate-right '(1 2 3 4 5) => (5 1 2 3 4))
+(define rotate-right
+  (lambda (lst)
+    (if(null? lst)
+       lst
+       (cons(last-item lst) (remove-last-item lst)))))
+
+; Signature: rotate-nth(lst n)
+; Type: [(List(T) * number) -> List(T)]
+; Purpose: Rotates the list n times to the right
+; Pre-conditions: n >= 0
+; Tests: (rotate-nth '(1 2 3 4 5) 1) => (5 1 2 3 4)
+(define rotate-nth
+  (lambda (lst n)
+    (if(= n 0) lst
+       (rotate-nth (rotate-right lst) (- n 1)))))
+
+; Signature: my-append(L1 L2)
+; Type: [(List(T) * List(T)) -> List(T)]
+; Purpose: merges two list into one list
+; Pre-conditions: L1, L2 are both lists
+; Tests: (my-append '(1 2) '(3 4)) -> (1 2 3 4)
+(define my-append
+  (lambda(L1 L2)
+    (if (null? L1)
+        L2
+        (cons (car L1) (my-append (cdr L1) L2)))))
+
+; Signature: deep-reverse(lst)
+; Type: [List(T) -> List(T)]
+; Purpose: returns a list with all elements reversed at every level of nesting
+; Pre-conditions: lst
+; Tests: (deep-reverse '(1 (2 3) (4 5)) -> ((5 4) (3 2) 1))
+(define deep-reverse
+  (lambda (lst)
+    (if (null? lst)
+        '()
+        (if (list? (car lst))
+            (my-append (deep-reverse (cdr lst)) 
+                    (list (deep-reverse (car lst))))
+            (my-append (deep-reverse (cdr lst)) 
+                    (list (car lst)))))))
+    
+       
+       
+    
